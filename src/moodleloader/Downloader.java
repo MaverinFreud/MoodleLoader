@@ -37,12 +37,12 @@ public class Downloader {
                 HttpGet request = new HttpGet(urlList.get(i) + "&redirect=1");
                 HttpResponse response = httpClient.execute(request);
                 HttpEntity entity = response.getEntity();
-                File dir = new File(folderName);
+                File dir = new File(Downloader.removeSignsFromFolderNames(folderName));
                 dir.mkdir();
                 String filePath = folderName + "/" + nameList.get(i) + ".pdf";
                 BufferedInputStream in = new BufferedInputStream(entity.getContent());
                 BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(new File(filePath)));
-                byte[] buff = new byte[64 * 1024];
+                byte[] buff = new byte[4096];
                 int len = 0;
                 while ((len = in.read(buff)) > 0) //If necessary readLine()
                 {
@@ -57,5 +57,14 @@ public class Downloader {
         }
 
     }
+    
+    /**
+     * Removes characters which are not allowed in folder-names
+     * @param folderName
+     * @return cleaned name
+     */
+    public static String removeSignsFromFolderNames(String folderName){
+    return HTMLParser.removeSignsFromFileNames(folderName);
+}
 
 }
